@@ -1,1 +1,7 @@
 # IPTools
+
+# Thanks
+
+sindresorhus
+
+ziyaddin
