@@ -7,7 +7,7 @@ let isIP = (ipaddress) => {
 let ipvalue, iplength, sendButton;
 
 //values
-let pIP, pMask, pNetwork, pBroadcast, pFirst, pLast, pNb
+let pIP, pMask, pNetwork, pBroadcast, pFirst, pLast, pNb, nbHost, wanted, subnet, mSubnet;
 
 let parse = (ip) => {
     let s = ""
@@ -85,10 +85,19 @@ let getNb = (length) => {
 }
 
 
+function getBits(nbHost) {
+    let i = 0;
+    while (Math.pow(2, i) - 2 < nbHost) {
+        i++;
+    }
+    return i;
+}
+
 window.onload = () => {
     ipvalue = document.getElementById("ip");
     iplength = document.getElementById("length");
     sendButton = document.getElementById("sendBtn");
+    nbHost = document.getElementById("hostNB");
 
     pIP = document.getElementById("Aip")
     pMask = document.getElementById("mask")
@@ -97,11 +106,15 @@ window.onload = () => {
     pFirst = document.getElementById("first")
     pLast = document.getElementById("last")
     pNb = document.getElementById("nbmachines")
+    wanted = document.getElementById("wanted")
+    subnet = document.getElementById("nbSubNet")
+    mSubnet = document.getElementById("machineSubnet")
 
     sendButton.addEventListener("click", () => {
-        if (isIP(ipvalue.value)) {
-            const lengthTest = parseInt(iplength.value)
-            const lengthIP = (lengthTest > 0 && lengthTest < 33) ? lengthTest : 24
+        if (isIP(ipvalue.value) && parseInt(nbHost.value) > 0 && parseInt(nbHost.value) < 65) {
+            let lengthTest = parseInt(iplength.value)
+            let lengthIP = (lengthTest > 0 && lengthTest < 33) ? lengthTest : 24
+            nbHost = parseInt(nbHost.value)
             let binaryIP2 = ipToBinary(ipvalue.value)
             pIP.innerHTML = `Adresse : ${ipvalue.value}/${lengthIP}`;
             pMask.innerHTML = `Masque : ${getMasque(lengthIP)}`;
@@ -110,6 +123,11 @@ window.onload = () => {
             pFirst.innerHTML = `First : ${getF(binaryIP2, lengthIP)}`;
             pLast.innerHTML = `Last : ${getL(binaryIP2, lengthIP)}`;
             pNb.innerHTML = `Nb de machines : ${getNb(lengthIP)}`;
+            let nbBitsMachines = getBits(nbHost)
+            wanted.innerHTML = `Vous avez besoin de ${nbHost} machines soit ${nbBitsMachines} bits`
+            let nbBitsSubnet = 32-lengthIP-nbBitsMachines
+            subnet.innerHTML = `Nb de bits pour les sous réseaux : ${nbBitsSubnet} -> Soit ${Math.pow(2, nbBitsSubnet)} sous reseaux`
+            mSubnet.innerHTML = `Nb de bits pour les machines des sous reseaux : ${nbBitsMachines} soit ${Math.pow(2, nbBitsMachines)} machines par sous reseau`
         }
     })
 }
