@@ -100,7 +100,7 @@ window.onload = () => {
 
     sendButton.addEventListener("click", () => {
         if (isIP(ipvalue.value)) {
-            const lengthIP = (iplength.value > 0 && iplength.value > 33) ? iplength.value : 24
+            const lengthIP = (parseInt(iplength.value) > 0 && parseInt(iplength.value) > 33) ? parseInt(iplength.value) : 24
             let binaryIP2 = ipToBinary(ipvalue.value)
             pIP.innerHTML = `Adresse : ${ipvalue.value}/${lengthIP}`;
             pMask.innerHTML = `Masque : ${getMasque(lengthIP)}`;
